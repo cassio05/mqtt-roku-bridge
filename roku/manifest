@@ -1,0 +1,6 @@
+title=MQTT Relays EMQX
+major_version=1
+minor_version=1
+build_version=0
+icon_focus_hd=pkg:/images/app_icon.png
+splash_hd=pkg:/images/app_splash.png

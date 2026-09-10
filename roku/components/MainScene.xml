@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="MainScene" extends="Scene">
+    <script type="text/brightscript" uri="pkg:/components/MainScene.brs" />
+
+    <children>
+        <Rectangle
+            id="background"
+            width="1280"
+            height="720"
+            color="0x030612FF" />
+
+        <Rectangle
+            id="topGlow"
+            width="1280"
+            height="170"
+            color="0x0A1025FF"
+            opacity="0.82" />
+
+        <Rectangle
+            id="headerPanel"
+            width="1140"
+            height="104"
+            translation="[70, 24]"
+            color="0x0B1326FF"
+            cornerRadius="22" />
+
+        <Rectangle
+            id="headerAccent"
+            width="5"
+            height="62"
+            translation="[94, 46]"
+            color="0x56E0E7FF"
+            cornerRadius="2" />
+
+        <Label
+            id="eyebrowLabel"
+            text="CASA // MQTT BRIDGE"
+            translation="[118, 40]"
+            width="500"
+            height="24"
+            font="font:SmallBoldSystemFont"
+            color="0x7E9DB8FF" />
+
+        <Label
+            id="titleLabel"
+            text="NEON HOUSE CONTROL"
+            translation="[118, 61]"
+            width="650"
+            height="44"
+            font="font:LargeBoldSystemFont"
+            color="0xFF6FB5FF" />
+
+        <Label
+            id="statusLabel"
+            text="● PONTE • iniciando"
+            translation="[865, 46]"
+            width="310"
+            height="28"
+            horizAlign="right"
+            font="font:MediumBoldSystemFont"
+            color="0xFFB45EFF" />
+
+        <Label
+            id="statusDetailLabel"
+            text="8 canais monitorados"
+            translation="[865, 72]"
+            width="310"
+            height="24"
+            horizAlign="right"
+            font="font:SmallSystemFont"
+            color="0x86A0B9FF" />
+
+        <Label
+            id="sectionLabel"
+            text="MATRIZ DE ILUMINAÇÃO"
+            translation="[80, 153]"
+            width="520"
+            height="28"
+            font="font:MediumBoldSystemFont"
+            color="0x68E8F5FF" />
+
+        <MarkupGrid
+            id="lampGrid"
+            translation="[80, 218]"
+            itemSize="[260, 220]"
+            numColumns="4"
+            numRows="2"
+            itemSpacing="[20, 18]"
+            itemComponentName="RelayItem" />
+
+        <Rectangle
+            id="hintBar"
+            width="1120"
+            height="32"
+            translation="[80, 680]"
+            color="0x0E1725FF"
+            cornerRadius="12" />
+
+        <Label
+            id="focusedLabel"
+            text="SELECIONE UM CANAL"
+            translation="[98, 685]"
+            width="730"
+            height="22"
+            font="font:SmallBoldSystemFont"
+            color="0xFF6FB5FF" />
+
+        <Label
+            id="editHintLabel"
+            text="OPTIONS ou *  •  editar nome do botão"
+            translation="[735, 685]"
+            width="445"
+            height="22"
+            horizAlign="right"
+            font="font:SmallSystemFont"
+            color="0x8296ABFF" />
+
+        <Timer
+            id="stateReaderTimer"
+            repeat="true"
+            duration="2" />
+    </children>
+</component>

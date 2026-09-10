@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="RelayItem" extends="Group">
+    <interface>
+        <field id="itemContent" type="node" />
+        <field id="state" type="string" />
+        <field id="title" type="string" />
+        <field id="relayId" type="integer" />
+    </interface>
+
+    <script type="text/brightscript">
+        <![CDATA[
+        sub init()
+            m.cardBg = m.top.findNode("cardBg")
+            m.focusBorder = m.top.findNode("focusBorder")
+            m.focusGlow = m.top.findNode("focusGlow")
+            m.itemLabel = m.top.findNode("itemLabel")
+            m.powerBtn = m.top.findNode("powerBtn")
+            m.statusLabel = m.top.findNode("statusLabel")
+            m.channelLabel = m.top.findNode("channelLabel")
+            m.focusAnimation = m.top.findNode("focusAnimation")
+
+            m.top.scaleRotateCenter = [130, 110]
+            m.top.scale = [1.0, 1.0]
+
+            m.top.observeField("itemContent", "itemContentChanged")
+            m.top.observeField("state", "onStateChange")
+            m.top.observeField("title", "onTitleChange")
+            m.top.observeField("itemHasFocus", "onItemFocusChange")
+            m.top.observeField("focusPercent", "onFocusPercentChange")
+
+            onTitleChange()
+            onStateChange()
+            onItemFocusChange()
+        end sub
+
+        sub itemContentChanged()
+            content = m.top.itemContent
+            if content <> invalid
+                if content.hasField("title") then m.top.title = content.title
+                if content.hasField("state") then m.top.state = content.state
+                if content.hasField("relayId") then m.top.relayId = content.relayId
+            end if
+            onTitleChange()
+            onStateChange()
+        end sub
+
+        sub onTitleChange()
+            if m.itemLabel = invalid then return
+            title = "CANAL " + m.top.relayId.ToStr()
+            if m.top.title <> invalid and m.top.title.ToStr() <> ""
+                title = UCase(m.top.title.ToStr())
+            end if
+            m.itemLabel.text = title
+        end sub
+
+        sub onStateChange()
+            st = "OFF"
+            if m.top.state <> invalid then st = UCase(m.top.state.ToStr())
+
+            isOn = (st = "ON" or st = "TRUE" or st = "1")
+            if isOn
+                m.powerBtn.uri = "pkg:/images/btn_power_green.png"
+                m.statusLabel.text = "LIGADO"
+                m.statusLabel.color = "0x54E6A0FF"
+                m.cardBg.color = "0x14261FFF"
+            else
+                m.powerBtn.uri = "pkg:/images/btn_power_red.png"
+                m.statusLabel.text = "DESLIGADO"
+                m.statusLabel.color = "0xFF7184FF"
+                m.cardBg.color = "0x151D2BFF"
+            end if
+        end sub
+
+        sub onItemFocusChange()
+            focused = false
+            if m.top.itemHasFocus <> invalid then focused = m.top.itemHasFocus
+
+            m.focusBorder.visible = focused
+            m.focusGlow.visible = focused
+            if focused
+                m.focusAnimation.control = "start"
+                onFocusPercentChange()
+            else
+                m.focusAnimation.control = "stop"
+                m.top.scale = [1.0, 1.0]
+                m.focusBorder.opacity = 0.0
+                m.focusGlow.opacity = 0.0
+            end if
+        end sub
+
+        sub onFocusPercentChange()
+            if m.top.focusPercent = invalid then return
+            percent = m.top.focusPercent
+            if percent < 0.0 then percent = 0.0
+            if percent > 1.0 then percent = 1.0
+
+            amount = percent
+            if m.top.itemHasFocus = false then amount = 1.0 - percent
+            m.top.scale = [1.0 + (0.06 * amount), 1.0 + (0.06 * amount)]
+            m.focusBorder.opacity = 0.95 * amount
+            m.focusGlow.opacity = 0.74 * amount
+        end sub
+        ]]>
+    </script>
+
+    <children>
+        <Rectangle
+            id="focusBorder"
+            width="260"
+            height="220"
+            color="0x55E3EFFF"
+            opacity="0.0"
+            visible="false"
+            cornerRadius="20" />
+
+        <Rectangle
+            id="focusGlow"
+            width="250"
+            height="210"
+            translation="[5, 5]"
+            color="0x55E3EF22"
+            opacity="0.0"
+            visible="false"
+            cornerRadius="17" />
+
+        <Rectangle
+            id="cardBg"
+            width="252"
+            height="212"
+            translation="[4, 4]"
+            color="0x151D2BFF"
+            cornerRadius="17" />
+
+        <Rectangle
+            id="cardTopLine"
+            width="216"
+            height="2"
+            translation="[22, 19]"
+            color="0x2E4C63FF"
+            cornerRadius="1" />
+
+        <Label
+            id="channelLabel"
+            text="CANAL"
+            translation="[20, 28]"
+            width="212"
+            height="18"
+            font="font:SmallSystemFont"
+            color="0x7893ACFF" />
+
+        <Label
+            id="itemLabel"
+            width="212"
+            height="39"
+            translation="[20, 44]"
+            horizAlign="left"
+            vertAlign="center"
+            font="font:MediumBoldSystemFont"
+            color="0xF4F8FFFF"
+            wrap="true" />
+
+        <Poster
+            id="powerBtn"
+            width="108"
+            height="108"
+            translation="[76, 91]"
+            uri="pkg:/images/btn_power_red.png"
+            loadDisplayMode="scaleToFit" />
+
+        <Label
+            id="statusLabel"
+            width="212"
+            height="22"
+            translation="[20, 184]"
+            horizAlign="center"
+            font="font:SmallBoldSystemFont"
+            color="0xFF7184FF" />
+
+        <Animation
+            id="focusAnimation"
+            duration="0.16"
+            easeFunction="outQuad">
+            <Vector2DFieldInterpolator
+                key="[0.0, 1.0]"
+                keyValue="[[1.0, 1.0], [1.06, 1.06]]"
+                fieldToInterp="top.scale" />
+            <FloatFieldInterpolator
+                key="[0.0, 1.0]"
+                keyValue="[0.0, 0.95]"
+                fieldToInterp="focusBorder.opacity" />
+            <FloatFieldInterpolator
+                key="[0.0, 1.0]"
+                keyValue="[0.0, 0.74]"
+                fieldToInterp="focusGlow.opacity" />
+        </Animation>
+    </children>
+</component>
